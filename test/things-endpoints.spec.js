@@ -25,6 +25,27 @@ describe('Things Endpoints', function() {
 
   afterEach('cleanup', () => helpers.cleanTables(db))
 
+  describe.only('protected endpoints', () => {
+    beforeEach('insert articles', () => 
+      helpers.seedThingsTables(
+        db,
+        testUsers,
+        testThings,
+        testReviews
+      )
+    )
+    describe(`GET /api/things/:thing_id`, () => {
+      it(`responds with 401 'missing basic auth' when no basic token`, () => {
+        return supertest(app)
+          .get(`/api/things/123`)
+          .expect(401, {error: `Missing basic token`})
+      })
+  
+    })
+  })
+
+  
+
   describe(`GET /api/things`, () => {
     context(`Given no things`, () => {
       it(`responds with 200 and an empty list`, () => {
